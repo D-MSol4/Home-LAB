@@ -1,0 +1,14 @@
+# Sensor template for obtaining brightness percentage from Sonoff Mini-DIM-E
+template:
+  - sensor:
+      - name: "Light Brightness - Wifi Smart Switch"
+        unique_id: light_brightness_pct_wifi_smart_switch
+        unit_of_measurement: "%"
+        icon: mdi:brightness-percent
+        state: >
+          {% if is_state('light.wifi_smart_switch', 'on') %}
+            {{ (state_attr('light.wifi_smart_switch', 'brightness') | float(0) / 2.55) | round(0) }}
+          {% else %}
+            0
+          {% endif %}
+          
