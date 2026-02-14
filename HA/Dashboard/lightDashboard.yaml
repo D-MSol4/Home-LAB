@@ -1,0 +1,48 @@
+# 7-day light status percentage graph (1-day view, scrollable)
+type: custom:apexcharts-card
+experimental:
+  brush: true
+graph_span: 7d
+brush:
+  selection_span: 1d
+apex_config:
+  tickAmount: 4
+  chart:
+    height: 260
+    animations:
+      enabled: false
+    zoom:
+      enabled: true
+      type: x
+      autoScaleYaxis: false
+    toolbar:
+      show: true
+      autoSelected: zoom
+      tools:
+        pan: true
+        zoom: false
+        zoomin: true
+        zoomout: true
+        reset: false
+        download: false
+  xaxis:
+    labels:
+      show: true
+      format: HH:mm
+  legend:
+    show: false
+header:
+  show: true
+  title: " "
+  show_states: false
+series:
+  - entity: sensor.light_brightness_wifi_smart_switch
+    stroke_width: 2
+    type: area
+    opacity: 0.4
+    curve: stepline
+    show:
+      in_brush: true
+yaxis:
+  - min: 0
+    max: 100
