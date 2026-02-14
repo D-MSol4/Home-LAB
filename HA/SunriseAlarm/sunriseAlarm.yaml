@@ -1,0 +1,50 @@
+# Sunrise simulation using Sonoff Dimmer Mini-DIM-E and Sleep As Android app (Webhooks).
+alias: Sunrise Alarm
+description: ""
+triggers:
+  - trigger: time
+    at:
+      entity_id: sensor.sleep_as_android_poco_f5_next_alarm
+      offset: "-00:15:00"
+conditions:
+  - condition: state
+    entity_id: light.wifi_smart_switch
+    state:
+      - "off"
+      - unavailable
+      - unknown
+actions:
+  - action: light.turn_on
+    target:
+      entity_id: light.wifi_smart_switch
+    data:
+      brightness_pct: 1
+      transition: 0
+  - repeat:
+      count: 100
+      sequence:
+        - delay:
+            seconds: 9
+        - variables:
+            step_pct: "{{ repeat.index }}"
+            target_brightness: |
+              {{ [ 1, ((step_pct / 100) ** 3 * 100) | round(0) ] | max }}
+        - if:
+            - condition: state
+              entity_id: light.wifi_smart_switch
+              state: "off"
+          then:
+            - stop: Light manually turned off.
+        - if:
+            - condition: template
+              value_template: >
+                {{ (state_attr('light.wifi_smart_switch', 'brightness') |
+                float(0) / 2.55) > (target_brightness + 2) }}
+          then:
+            - stop: Manual brightness increase detected. Stopping alarm
+        - action: light.turn_on
+          target:
+            entity_id: light.wifi_smart_switch
+          data:
+            brightness_pct: "{{ target_brightness }}"
+mode: single
