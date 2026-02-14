@@ -1,4 +1,5 @@
-# Sensor template for obtaining brightness percentage from Sonoff Mini-DIM-E
+# Sensor template to get the brightness percentage of the Sonoff Mini-DIM-E
+# Add this to Home Assistant configuration.yaml
 template:
   - sensor:
       - name: "Light Brightness - Wifi Smart Switch"
